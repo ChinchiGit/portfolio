@@ -1,0 +1,30 @@
+{
+  "name": "portfolio_backend",
+  "version": "1.0.0",
+  "description": "Portfolio Backend server",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChinchiGit/portfolio.git"
+  },
+  "keywords": [
+    "Node",
+    "MongoDB",
+    "Mongoose",
+    "Backend",
+    "Portfolio"
+  ],
+  "author": "Carlos Chinchilla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChinchiGit/portfolio/issues"
+  },
+  "homepage": "https://github.com/ChinchiGit/portfolio#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.0"
+  }
+}
