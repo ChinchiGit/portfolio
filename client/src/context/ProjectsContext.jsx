@@ -12,7 +12,6 @@ export const ProjectsProvider = ({ children }) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
         setProjects(response.data);
-        console.log("Projects fetched:", response.data);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
@@ -21,10 +20,10 @@ export const ProjectsProvider = ({ children }) => {
     };
 
     fetchProjects();
-  }, []);
+  }, [projects]);
 
   return (
-    <ProjectsContext.Provider value={{ projects, loading }}>
+    <ProjectsContext.Provider value={{ projects, setProjects, loading }}>
       {children}
     </ProjectsContext.Provider>
   );
