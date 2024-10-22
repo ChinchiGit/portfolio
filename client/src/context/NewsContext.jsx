@@ -12,7 +12,6 @@ export const NewsProvider = ({ children }) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/news`);
         setNews(response.data);
-        console.log("News fetched:", response.data);
       } catch (error) {
         console.error("Error fetching news:", error);
       } finally {
@@ -21,10 +20,10 @@ export const NewsProvider = ({ children }) => {
     };
 
     fetchNews();
-  }, []);
+  }, [news]);
 
   return (
-    <NewsContext.Provider value={{ news, loading }}>
+    <NewsContext.Provider value={{ news, setNews, loading }}>
       {children}
     </NewsContext.Provider>
   );
@@ -33,4 +32,3 @@ export const NewsProvider = ({ children }) => {
 export const useNews = () => {
   return useContext(NewsContext);
 };
-
