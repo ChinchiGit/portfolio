@@ -3,37 +3,29 @@ name: Deploy to Railway
 on:
   push:
     branches:
-      - ci-cd-deployment
+      - ci/cd   # Solo se ejecuta cuando haces push a la rama ci/cd
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      # Configuración de Docker para build y push
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Log in to Railway Container Registry
-      env:
-        RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-      run: |
-        echo "$RAILWAY_API_TOKEN" | docker login --username=_ --password-stdin registry.railway.app
+      - name: Build and push Docker images
+        run: |
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml push
 
-    - name: Build and push client Docker image
-      run: |
-        docker build -t registry.railway.app/<RAILWAY_PROJECT_ID>/client ./client
-        docker push registry.railway.app/<RAILWAY_PROJECT_ID>/client
-
-    - name: Build and push server Docker image
-      run: |
-        docker build -t registry.railway.app/<RAILWAY_PROJECT_ID>/server ./server
-        docker push registry.railway.app/<RAILWAY_PROJECT_ID>/server
-
-    - name: Release to Railway
-      env:
-        RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-      run: |
-        railway up --project <RAILWAY_PROJECT_ID>
+      # Despliegue a Railway
+      - name: Deploy to Railway
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+        run: |
+          railway up --token=$RAILWAY_API_TOKEN --project=$RAILWAY_PROJECT_ID
