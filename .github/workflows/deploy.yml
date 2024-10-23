@@ -3,7 +3,7 @@ name: Deploy to Railway
 on:
   push:
     branches:
-      - ci/cd   # Solo se ejecuta cuando haces push a la rama ci/cd
+      - ci-cd-deployment   
 
 jobs:
   deploy:
