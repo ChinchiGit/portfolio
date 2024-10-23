@@ -2,8 +2,8 @@ name: Deploy to Railway
 
 on:
   push:
-	branches:
-	  - ci-cd-deployment   
+    branches:
+      - ci-cd-deployment   
 
 jobs:
   deploy:
