@@ -3,7 +3,7 @@ name: Deploy to Railway
 on:
   push:
     branches:
-      - ci-cd-deployment
+      - ci-cd-deployment   
 
 jobs:
   deploy:
@@ -13,19 +13,18 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
+      # Instalar Docker Compose
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
       # Configuración de Docker para build y push
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Docker images
-        uses: docker/compose-action@v2
-        with:
-          command: build
-
-      - name: Push Docker images
-        uses: docker/compose-action@v2
-        with:
-          command: push
+      - name: Build and push Docker images
+        run: |
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml push
 
       # Despliegue a Railway
       - name: Deploy to Railway
