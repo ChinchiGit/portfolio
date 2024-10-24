@@ -45,11 +45,14 @@ jobs:
 
       # Vincular el proyecto en Railway
       - name: Install Railway CLI
-        run: npm install -g railway
+        run: npm install -g @railway/cli
+
+
 
       - name: Verify Railway CLI Installation
         run: railway --version
 
+        
       # - name: Link Railway project
       #   run: railway link --project=$RAILWAY_PROJECT_ID
       #   env:
