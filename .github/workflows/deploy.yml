@@ -53,11 +53,11 @@ jobs:
         run: railway --version
 
         
-      # - name: Link Railway project
-      #   run: railway link --project=$RAILWAY_PROJECT_ID
-      #   env:
-      #     RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-      #     RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+      - name: Link Railway project
+        run: railway link --project=$RAILWAY_PROJECT_ID
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
 
       # Despliegue a Railway
       - name: Deploy to Railway
