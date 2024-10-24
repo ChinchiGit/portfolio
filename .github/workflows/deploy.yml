@@ -44,6 +44,12 @@ jobs:
         run: docker-compose push
 
       # Vincular el proyecto en Railway
+      - name: Install Railway CLI
+        run: npm install -g railway
+
+      - name: Verify Railway CLI Installation
+        run: railway --version
+
       - name: Link Railway project
         run: railway link --project=$RAILWAY_PROJECT_ID
         env:
