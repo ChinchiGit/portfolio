@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useProjects } from '../context/ProjectsContext';
 import AdminItem from '../components/AdminItem';
+import AdminNavBar from '../components/AdminNavBar';
 import ProjectForm from '../components/ProjectsForm';
 import axios from 'axios';
 
@@ -46,6 +47,7 @@ const ProjectsPage = () => {
 
   return (
     <div>
+      <AdminNavBar />
       <h1>Proyectos</h1>
 
       {projects.map(item => (
