@@ -52,15 +52,17 @@ jobs:
 
       # # Iniciar sesión en Railway
       # - name: Log in to Railway
-      #   run: echo "${{ secrets.RAILWAY_API_TOKEN }}" | railway auth login --token-stdin
+      #   run: railway login --token=${{ secrets.RAILWAY_API_TOKEN }}
 
-      # Despliegue a Railway usando las imágenes Docker de Docker Hub
-      - name: Deploy Client to Railway
-        run: railway container deploy --service client --image chinchigit/portfolio_portfolio-client:latest
-        env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-
+      # Despliegue del servidor en Railway
       - name: Deploy Server to Railway
-        run: railway container deploy --service server --image chinchigit/portfolio_portfolio-server:latest
-        env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        run: |
+          cd server
+          railway up
+          cd ..
+
+      # Despliegue del cliente en Railway
+      - name: Deploy Client to Railway
+        run: |
+          cd client
+          railway up
