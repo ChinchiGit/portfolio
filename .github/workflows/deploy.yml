@@ -31,8 +31,10 @@ jobs:
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
 
       # Configuración de Docker para build y push
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Log in to Railway Container Registry
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        run: echo "${{ secrets.RAILWAY_API_TOKEN }}" | docker login --username=_ --password-stdin registry.railway.app
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -40,27 +42,31 @@ jobs:
       - name: Build Docker images
         run: docker-compose build
 
-      - name: Push Docker images
-        run: docker-compose push
+      - name: Tag and Push Client Docker image
+        run: |
+          docker tag client registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
+          docker push registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
 
-      # Vincular el proyecto en Railway
+      - name: Tag and Push Server Docker image
+        run: |
+          docker tag server registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
+          docker push registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
+
+      # Instalar Railway CLI
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      # Iniciar sesión en Railway
+      - name: Log in to Railway
+        run: railway login --token=${{ secrets.RAILWAY_API_TOKEN }}
 
-
-      - name: Verify Railway CLI Installation
-        run: railway --version
-
-        
-      - name: Link Railway project
-        run: railway link --project=$RAILWAY_PROJECT_ID --team=Personal --environment=production
+      # Despliegue a Railway usando las imágenes Docker
+      - name: Deploy to Railway
+        run: railway container deploy --service client --image registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
 
-      # Despliegue a Railway
       - name: Deploy to Railway
-        run: railway up -- --token=$RAILWAY_API_TOKEN
+        run: railway container deploy --service server --image registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
