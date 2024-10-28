@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNews } from '../context/NewsContext';
 import AdminItem from '../components/AdminItem';
+import AdminNavBar from '../components/AdminNavBar';
 import NewsForm from '../components/NewsForm';
 import axios from 'axios';
 
@@ -46,6 +47,7 @@ const NewsPage = () => {
 
   return (
     <div>
+      <AdminNavBar />
       <h1>Noticias</h1>
 
       {news.map(item => (
