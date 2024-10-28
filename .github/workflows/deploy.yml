@@ -1,4 +1,4 @@
-name: Deploy to Railway
+name: Deploy to Docker Hub and Railway
 
 on:
   push:
@@ -31,10 +31,8 @@ jobs:
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
 
       # Configuración de Docker para build y push
-      - name: Log in to Railway Container Registry
-        env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-        run: echo "${{ secrets.RAILWAY_API_TOKEN }}" | docker login --username=_ --password-stdin registry.railway.app
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -44,13 +42,13 @@ jobs:
 
       - name: Tag and Push Client Docker image
         run: |
-          docker tag client registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
-          docker push registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
+          docker tag client chinchigit/portfolio_portfolio-client:latest
+          docker push chinchigit/portfolio_portfolio-client:latest
 
       - name: Tag and Push Server Docker image
         run: |
-          docker tag server registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
-          docker push registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
+          docker tag server chinchigit/portfolio_portfolio-server:latest
+          docker push chinchigit/portfolio_portfolio-server:latest
 
       # Instalar Railway CLI
       - name: Install Railway CLI
@@ -60,13 +58,13 @@ jobs:
       - name: Log in to Railway
         run: railway login --token=${{ secrets.RAILWAY_API_TOKEN }}
 
-      # Despliegue a Railway usando las imágenes Docker
-      - name: Deploy to Railway
-        run: railway container deploy --service client --image registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/client:latest
+      # Despliegue a Railway usando las imágenes Docker de Docker Hub
+      - name: Deploy Client to Railway
+        run: railway container deploy --service client --image chinchigit/portfolio_portfolio-client:latest
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
 
-      - name: Deploy to Railway
-        run: railway container deploy --service server --image registry.railway.app/${{ secrets.RAILWAY_PROJECT_ID }}/server:latest
+      - name: Deploy Server to Railway
+        run: railway container deploy --service server --image chinchigit/portfolio_portfolio-server:latest
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
