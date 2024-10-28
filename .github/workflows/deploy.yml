@@ -50,9 +50,8 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      # # Iniciar sesión en Railway
-      # - name: Log in to Railway
-      #   run: railway login --token=${{ secrets.RAILWAY_API_TOKEN }}
+      - name: Railway Login
+        run: echo "${{ secrets.RAILWAY_TOKEN }}" | railway login --token
 
       # Despliegue del servidor en Railway
       - name: Deploy Server to Railway
