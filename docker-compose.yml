@@ -1,24 +1,14 @@
 version: '3.8'
+
 services:
   client:
-    build: ./client
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    env_file:
-      - .env
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: chinchigit/portfolio_portfolio-client:latest
+
   server:
-    build: ./server
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-    env_file:
-      - .env
-  mongo:
-    image: mongo
-    ports:
-      - "27017:27017"
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: chinchigit/portfolio_portfolio-server:latest

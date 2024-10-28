@@ -40,15 +40,11 @@ jobs:
       - name: Build Docker images
         run: docker-compose build
 
-      - name: Tag and Push Client Docker image
-        run: |
-          docker tag client chinchigit/portfolio_portfolio-client:latest
-          docker push chinchigit/portfolio_portfolio-client:latest
+      - name: Push Client Docker image
+        run: docker push chinchigit/portfolio_portfolio-client:latest
 
-      - name: Tag and Push Server Docker image
-        run: |
-          docker tag server chinchigit/portfolio_portfolio-server:latest
-          docker push chinchigit/portfolio_portfolio-server:latest
+      - name: Push Server Docker image
+        run: docker push chinchigit/portfolio_portfolio-server:latest
 
       # Instalar Railway CLI
       - name: Install Railway CLI
